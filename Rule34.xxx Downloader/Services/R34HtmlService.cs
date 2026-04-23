@@ -216,7 +216,20 @@ namespace R34Downloader.Services
                 }
             };
 
-            return htmlWeb.Load(url);
+            for (int attempt = 1; attempt <= 3; attempt++)
+            {
+                try
+                {
+                    return htmlWeb.Load(url);
+                }
+                catch (Exception)
+                {
+                    if (attempt == 3) throw;
+                    System.Threading.Thread.Sleep(500 * attempt);
+                }
+            }
+
+            return null;
         }
 
         #endregion

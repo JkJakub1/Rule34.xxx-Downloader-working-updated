@@ -10,6 +10,42 @@ namespace R34Downloader.Services
     /// </summary>
     public static class DownloadService
     {
+        #region Fields
+
+        private static readonly CookieContainer CookieContainer;
+        private static readonly HttpClient Client;
+
+        #endregion
+
+        #region Constructors
+
+        static DownloadService()
+        {
+            CookieContainer = new CookieContainer();
+            
+            // Standard GDPR cookies
+            CookieContainer.Add(new Cookie("gdpr", "1", "/", ".rule34.xxx"));
+            CookieContainer.Add(new Cookie("gdpr-consent", "1", "/", ".rule34.xxx"));
+
+            var handler = new HttpClientHandler
+            {
+                UseCookies = true,
+                CookieContainer = CookieContainer,
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+            };
+
+            Client = new HttpClient(handler);
+            Client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36");
+            Client.DefaultRequestHeaders.Referrer = new Uri("https://rule34.xxx/");
+            Client.DefaultRequestHeaders.Accept.ParseAdd("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8");
+            
+            // Optimization for many connections
+            ServicePointManager.DefaultConnectionLimit = 10;
+            ServicePointManager.Expect100Continue = false;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -27,47 +63,28 @@ namespace R34Downloader.Services
                     Directory.CreateDirectory(directory);
                 }
 
-                var handler = new HttpClientHandler
+                // Simple retry logic (3 attempts)
+                for (int attempt = 1; attempt <= 3; attempt++)
                 {
-                    UseCookies = true,
-                    CookieContainer = new CookieContainer()
-                };
-
-                handler.CookieContainer.Add(new Cookie
-                {
-                    Name = "gdpr",
-                    Value = "1",
-                    Domain = ".rule34.xxx",
-                    Path = "/",
-                    Expires = DateTime.Now.AddYears(1)
-                });
-
-                handler.CookieContainer.Add(new Cookie
-                {
-                    Name = "gdpr-consent",
-                    Value = "1",
-                    Domain = ".rule34.xxx",
-                    Path = "/",
-                    Expires = DateTime.Now.AddYears(1)
-                });
-
-                using (var client = new HttpClient(handler))
-                {
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36");
-                    client.DefaultRequestHeaders.Referrer = new Uri("https://rule34.xxx/");
-                    client.DefaultRequestHeaders.Accept.ParseAdd("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8");
-
                     try
                     {
-                        var response = client.GetAsync(url).Result;
+                        var response = Client.GetAsync(url).Result;
                         response.EnsureSuccessStatusCode();
 
                         var data = response.Content.ReadAsByteArrayAsync().Result;
                         File.WriteAllBytes(filePath, data);
+                        break; // Success
                     }
-                    catch
+                    catch (Exception)
                     {
-                        // ignored
+                        if (attempt == 3)
+                        {
+                            // Log or ignore on final failure
+                        }
+                        else
+                        {
+                            System.Threading.Thread.Sleep(1000 * attempt); // Progressive backoff
+                        }
                     }
                 }
             }
