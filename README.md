@@ -19,4 +19,4 @@ While using a specific filter (e.g., `rating:safe`) can yield safe content, the 
 
 ![image](https://github.com/user-attachments/assets/f505f0c9-4d9d-4019-90d7-de0ee6d0d35a)
 
-![image](https://github.com/user-attachments/assets/8ce7044b-891b-4008-8090-247c223bf71c)
+<img width="255" height="275" alt="image" src="https://github.com/user-attachments/assets/6978ab7a-8158-4528-99f4-c9d76dc3ef34" />
