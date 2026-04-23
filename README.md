@@ -1,10 +1,10 @@
 # Rule34.xxx Downloader v.1.0.5
-
+fork from DaxEleven
 An application for downloading content from the site Rule34.xxx. It allows you to download both images and videos. Downloading is possible either via the official API or through HTML parsing (if the API is unavailable for any reason).
 
 For search, you can use the same system as on the website, which allows you to configure filters using a special syntax and keywords.
 
-### Download: [R34Downloader.zip](https://github.com/DaxEleven/Rule34.xxx-Downloader/releases/download/1.0.5/R34Downloader.zip)
+### Download: [R34Downloader.zip](https://github.com/JkJakub1/Rule34.xxx-Downloader-working-updated/releases/download/1.0.6/R34Downloader.zip)
 
 ###### Requires [.NET Framework 4.8.1 (runtime)](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net481) *you most likely already have this installed, unless you're an ancient dinosaur using Windows 7 without updates*
 
