@@ -1,4 +1,4 @@
-﻿using System.Resources;
+using System.Resources;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Rule34.xxx Downloader")]
 [assembly: AssemblyDescription("The program for downloading content from the rule34.xxx")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Dax Eleven")]
+[assembly: AssemblyCompany("JkJakub1")]
 [assembly: AssemblyProduct("Rule34.xxx Downloader")]
 [assembly: AssemblyCopyright("Copyright © 2017-2025")]
 [assembly: AssemblyTrademark("")]
