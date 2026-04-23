@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -23,10 +23,10 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <SupportUrl>https://github.com/Dax-Eleven/Rule34.xxx-Downloader</SupportUrl>
-    <ErrorReportUrl>https://github.com/Dax-Eleven/Rule34.xxx-Downloader</ErrorReportUrl>
+    <SupportUrl>https://github.com/JkJakub1/Rule34.xxx-Downloader-working-updated</SupportUrl>
+    <ErrorReportUrl>https://github.com/JkJakub1/Rule34.xxx-Downloader-working-updated</ErrorReportUrl>
     <TargetCulture>en</TargetCulture>
-    <PublisherName>Dax Eleven</PublisherName>
+    <PublisherName>JkJakub1</PublisherName>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.3.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
