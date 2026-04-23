@@ -1,4 +1,4 @@
-﻿using HtmlAgilityPack;
+using HtmlAgilityPack;
 using R34Downloader.Models;
 using System;
 using System.IO;
@@ -197,7 +197,7 @@ namespace R34Downloader.Services
                         {
                             Name = "gdpr",
                             Value = "1",
-                            Domain = "rule34.xxx",
+                            Domain = ".rule34.xxx",
                             Path = "/",
                             Expires = DateTime.Now.AddYears(1)
                         });
@@ -206,7 +206,7 @@ namespace R34Downloader.Services
                         {
                             Name = "gdpr-consent",
                             Value = "1",
-                            Domain = "rule34.xxx",
+                            Domain = ".rule34.xxx",
                             Path = "/",
                             Expires = DateTime.Now.AddYears(1)
                         });

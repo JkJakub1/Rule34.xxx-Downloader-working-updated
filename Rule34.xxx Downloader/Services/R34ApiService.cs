@@ -1,6 +1,8 @@
-﻿using R34Downloader.Models;
+using R34Downloader.Models;
 using System;
 using System.IO;
+using System.Net;
+using System.Net.Http;
 using System.Xml;
 
 namespace R34Downloader.Services
@@ -12,7 +14,7 @@ namespace R34Downloader.Services
     {
         #region Fields
 
-        private const string ApiUrl = "https://rule34.xxx/index.php?page=dapi&s=post&q=index";
+        private const string ApiUrl = "https://api.rule34.xxx/index.php?page=dapi&s=post&q=index";
 
         private const byte PageSize = 100;
 
@@ -28,7 +30,30 @@ namespace R34Downloader.Services
         public static int GetContentCount(string tags)
         {
             var document = new XmlDocument();
-            document.Load($"{ApiUrl}&tags={tags}");
+            
+            var handler = new HttpClientHandler
+            {
+                UseCookies = true,
+                CookieContainer = new CookieContainer()
+            };
+
+            handler.CookieContainer.Add(new Cookie("gdpr", "1", "/", ".rule34.xxx"));
+            handler.CookieContainer.Add(new Cookie("gdpr-consent", "1", "/", ".rule34.xxx"));
+
+            using (var client = new HttpClient(handler))
+            {
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36");
+                client.DefaultRequestHeaders.Referrer = new Uri("https://rule34.xxx/");
+                client.DefaultRequestHeaders.Accept.ParseAdd("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8");
+                
+                var response = client.GetStringAsync(GetAuthenticatedUrl($"{ApiUrl}&tags={tags}")).GetAwaiter().GetResult();
+                document.LoadXml(response);
+
+                if (document.DocumentElement?.Name == "error")
+                {
+                    throw new Exception(document.DocumentElement.InnerText);
+                }
+            }
 
             return int.TryParse(document.DocumentElement?.Attributes[0].Value, out var count) ? count : default;
         }
@@ -45,40 +70,79 @@ namespace R34Downloader.Services
         {
             var maxPid = quantity <= PageSize ? 1 : quantity % PageSize == 0 ? quantity / PageSize - 1 : quantity / PageSize;
 
-            for (var pid = 0; pid <= maxPid; pid++)
+            var handler = new HttpClientHandler
             {
-                var doc = new XmlDocument();
-                doc.Load($"{ApiUrl}&tags={tags}&pid={pid}");
+                UseCookies = true,
+                CookieContainer = new CookieContainer()
+            };
 
-                var postCount = quantity - pid * PageSize < PageSize ? quantity - pid * PageSize : PageSize;
-                for (var i = 0; i < postCount; i++)
+            handler.CookieContainer.Add(new Cookie("gdpr", "1", "/", ".rule34.xxx"));
+            handler.CookieContainer.Add(new Cookie("gdpr-consent", "1", "/", ".rule34.xxx"));
+
+            using (var client = new HttpClient(handler))
+            {
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36");
+                client.DefaultRequestHeaders.Referrer = new Uri("https://rule34.xxx/");
+                client.DefaultRequestHeaders.Accept.ParseAdd("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8");
+
+                for (var pid = 0; pid <= maxPid; pid++)
                 {
-                    var url = doc.DocumentElement?.ChildNodes[i].Attributes?.GetNamedItem("file_url")?.Value;
-                    var fileExtension = Path.GetExtension(url);
-                    var filename = doc.DocumentElement?.ChildNodes[i].Attributes?.GetNamedItem("id")?.Value + fileExtension;
+                    var doc = new XmlDocument();
+                    var response = client.GetStringAsync(GetAuthenticatedUrl($"{ApiUrl}&tags={tags}&pid={pid}")).GetAwaiter().GetResult();
+                    doc.LoadXml(response);
 
-                    if (url != null)
+                    if (doc.DocumentElement?.Name == "error")
                     {
-                        if ((fileExtension == ".mp4" || fileExtension == ".webm") && SettingsModel.Video)
-                        {
-                            var sampleUrl = doc.DocumentElement?.ChildNodes[i].Attributes?.GetNamedItem("sample_url")?.Value ?? url;
-                            DownloadService.Download(sampleUrl, Path.Combine(path, "Video", filename));
-                        }
-                        else if (fileExtension == ".gif" && SettingsModel.Gif)
-                        {
-                            DownloadService.Download(url, Path.Combine(path, "Gif", filename));
-                        }
-                        else if (fileExtension != ".mp4" && fileExtension != ".webm" && fileExtension != ".gif" && SettingsModel.Images)
-                        {
-                            DownloadService.Download(url, Path.Combine(path, "Images", filename));
-                        }
+                        throw new Exception(doc.DocumentElement.InnerText);
                     }
 
-                    var reportStatus = pid * 100 + i + 1;
-                    progress.Report(reportStatus);
-                    progress2.Report(reportStatus);
+                    var postCount = quantity - pid * PageSize < PageSize ? quantity - pid * PageSize : PageSize;
+                    for (var i = 0; i < postCount; i++)
+                    {
+                        var url = doc.DocumentElement?.ChildNodes[i].Attributes?.GetNamedItem("file_url")?.Value;
+                        var fileExtension = Path.GetExtension(url);
+                        var filename = doc.DocumentElement?.ChildNodes[i].Attributes?.GetNamedItem("id")?.Value + fileExtension;
+
+                        if (url != null)
+                        {
+                            if ((fileExtension == ".mp4" || fileExtension == ".webm") && SettingsModel.Video)
+                            {
+                                var sampleUrl = doc.DocumentElement?.ChildNodes[i].Attributes?.GetNamedItem("sample_url")?.Value ?? url;
+                                DownloadService.Download(sampleUrl, Path.Combine(path, "Video", filename));
+                            }
+                            else if (fileExtension == ".gif" && SettingsModel.Gif)
+                            {
+                                DownloadService.Download(url, Path.Combine(path, "Gif", filename));
+                            }
+                            else if (fileExtension != ".mp4" && fileExtension != ".webm" && fileExtension != ".gif" && SettingsModel.Images)
+                            {
+                                DownloadService.Download(url, Path.Combine(path, "Images", filename));
+                            }
+                        }
+
+                        var reportStatus = pid * 100 + i + 1;
+                        progress.Report(reportStatus);
+                        progress2.Report(reportStatus);
+                    }
                 }
             }
+        }
+
+        private static string GetAuthenticatedUrl(string url)
+        {
+            var authenticatedUrl = url;
+
+            if (!string.IsNullOrEmpty(SettingsModel.UserId))
+            {
+                authenticatedUrl += $"&user_id={SettingsModel.UserId}";
+            }
+
+            if (!string.IsNullOrEmpty(SettingsModel.ApiKey))
+            {
+                authenticatedUrl += $"&api_key={SettingsModel.ApiKey}";
+            }
+
+            return authenticatedUrl;
         }
 
         #endregion

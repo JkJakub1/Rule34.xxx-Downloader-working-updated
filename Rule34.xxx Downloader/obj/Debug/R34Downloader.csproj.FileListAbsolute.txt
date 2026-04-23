@@ -1,0 +1,16 @@
+C:\Users\Jakub\Počítač\Nový priečinok\Rule34.xxx-Downloader-master\Rule34.xxx Downloader\bin\Debug\R34Downloader.exe.config
+C:\Users\Jakub\Počítač\Nový priečinok\Rule34.xxx-Downloader-master\Rule34.xxx Downloader\bin\Debug\R34Downloader.exe
+C:\Users\Jakub\Počítač\Nový priečinok\Rule34.xxx-Downloader-master\Rule34.xxx Downloader\bin\Debug\R34Downloader.pdb
+C:\Users\Jakub\Počítač\Nový priečinok\Rule34.xxx-Downloader-master\Rule34.xxx Downloader\bin\Debug\HtmlAgilityPack.dll
+C:\Users\Jakub\Počítač\Nový priečinok\Rule34.xxx-Downloader-master\Rule34.xxx Downloader\bin\Debug\HtmlAgilityPack.pdb
+C:\Users\Jakub\Počítač\Nový priečinok\Rule34.xxx-Downloader-master\Rule34.xxx Downloader\bin\Debug\HtmlAgilityPack.xml
+C:\Users\Jakub\Počítač\Nový priečinok\Rule34.xxx-Downloader-master\Rule34.xxx Downloader\obj\Debug\R34Downloader.csproj.AssemblyReference.cache
+C:\Users\Jakub\Počítač\Nový priečinok\Rule34.xxx-Downloader-master\Rule34.xxx Downloader\obj\Debug\R34Downloader.Forms.DownloadingForm.resources
+C:\Users\Jakub\Počítač\Nový priečinok\Rule34.xxx-Downloader-master\Rule34.xxx Downloader\obj\Debug\R34Downloader.Forms.MainForm.resources
+C:\Users\Jakub\Počítač\Nový priečinok\Rule34.xxx-Downloader-master\Rule34.xxx Downloader\obj\Debug\R34Downloader.Properties.Resources.resources
+C:\Users\Jakub\Počítač\Nový priečinok\Rule34.xxx-Downloader-master\Rule34.xxx Downloader\obj\Debug\R34Downloader.Forms.SettingsForm.resources
+C:\Users\Jakub\Počítač\Nový priečinok\Rule34.xxx-Downloader-master\Rule34.xxx Downloader\obj\Debug\R34Downloader.csproj.GenerateResource.cache
+C:\Users\Jakub\Počítač\Nový priečinok\Rule34.xxx-Downloader-master\Rule34.xxx Downloader\obj\Debug\R34Downloader.csproj.CoreCompileInputs.cache
+C:\Users\Jakub\Počítač\Nový priečinok\Rule34.xxx-Downloader-master\Rule34.xxx Downloader\obj\Debug\R34Downl.3D6BFE12.Up2Date
+C:\Users\Jakub\Počítač\Nový priečinok\Rule34.xxx-Downloader-master\Rule34.xxx Downloader\obj\Debug\R34Downloader.exe
+C:\Users\Jakub\Počítač\Nový priečinok\Rule34.xxx-Downloader-master\Rule34.xxx Downloader\obj\Debug\R34Downloader.pdb

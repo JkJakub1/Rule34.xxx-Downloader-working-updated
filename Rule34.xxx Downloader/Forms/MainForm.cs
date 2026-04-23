@@ -1,7 +1,8 @@
-﻿using R34Downloader.Models;
+using R34Downloader.Models;
 using R34Downloader.Services;
 using System;
 using System.Diagnostics;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -29,7 +30,9 @@ namespace R34Downloader.Forms
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            SettingsModel.IsApi = false;
+            SettingsModel.IsApi = Properties.Settings.Default.IsApi;
+            SettingsModel.UserId = Properties.Settings.Default.UserId;
+            SettingsModel.ApiKey = Properties.Settings.Default.ApiKey;
             toolStripStatusLabel1.Text = "Welcome!";
             toolStripStatusLabel2.Text = "0 / 0";
 
@@ -40,7 +43,11 @@ namespace R34Downloader.Forms
 
             if (!CheckForInternetConnection("https://rule34.xxx"))
             {
-                if (MessageBox.Show("You are offline, please check your internet connection", "Failed to connect to Rule34.xxx", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) == DialogResult.Retry)
+                if (CheckForInternetConnection("https://google.com"))
+                {
+                    MessageBox.Show("Rule34.xxx seems to be blocking your connection or is currently down. The application might not work correctly.", "Connection Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else if (MessageBox.Show("You are offline, please check your internet connection", "Failed to connect to Rule34.xxx", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) == DialogResult.Retry)
                 {
                     Form1_Load(sender, e);
                 }
@@ -225,16 +232,33 @@ namespace R34Downloader.Forms
         {
             try
             {
-                using (var client = new HttpClient())
+                var handler = new HttpClientHandler
                 {
+                    UseCookies = true,
+                    CookieContainer = new CookieContainer(),
+                    AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+                };
+
+                handler.CookieContainer.Add(new Cookie("gdpr", "1", "/", ".rule34.xxx"));
+                handler.CookieContainer.Add(new Cookie("gdpr-consent", "1", "/", ".rule34.xxx"));
+
+                using (var client = new HttpClient(handler))
+                {
+                    client.Timeout = TimeSpan.FromSeconds(10);
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36");
+                    client.DefaultRequestHeaders.Referrer = new Uri("https://rule34.xxx/");
+                    client.DefaultRequestHeaders.Accept.ParseAdd("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8");
+
                     var responseTask = client.GetAsync(address);
                     var response = responseTask.GetAwaiter().GetResult();
 
-                    return response.IsSuccessStatusCode;
+                    // If we got any response (even 403 Forbidden), it means we are NOT offline.
+                    return true;
                 }
             }
-            catch
+            catch (Exception)
             {
+                // Only return false if there is a real connection error (DNS, Timeout, etc.)
                 return false;
             }
         }

@@ -1,4 +1,4 @@
-﻿namespace R34Downloader.Models
+namespace R34Downloader.Models
 {
     /// <summary>
     /// Settings DTO model.
@@ -29,5 +29,15 @@
         /// Parsing method flag.
         /// </summary>
         public static bool IsApi { get; set; }
+
+        /// <summary>
+        /// User ID for API.
+        /// </summary>
+        public static string UserId { get; set; }
+
+        /// <summary>
+        /// API Key.
+        /// </summary>
+        public static string ApiKey { get; set; }
     }
 }

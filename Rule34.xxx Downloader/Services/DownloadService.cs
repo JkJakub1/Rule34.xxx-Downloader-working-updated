@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -37,7 +37,7 @@ namespace R34Downloader.Services
                 {
                     Name = "gdpr",
                     Value = "1",
-                    Domain = "rule34.xxx",
+                    Domain = ".rule34.xxx",
                     Path = "/",
                     Expires = DateTime.Now.AddYears(1)
                 });
@@ -46,7 +46,7 @@ namespace R34Downloader.Services
                 {
                     Name = "gdpr-consent",
                     Value = "1",
-                    Domain = "rule34.xxx",
+                    Domain = ".rule34.xxx",
                     Path = "/",
                     Expires = DateTime.Now.AddYears(1)
                 });
@@ -55,6 +55,7 @@ namespace R34Downloader.Services
                 {
                     client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36");
                     client.DefaultRequestHeaders.Referrer = new Uri("https://rule34.xxx/");
+                    client.DefaultRequestHeaders.Accept.ParseAdd("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8");
 
                     try
                     {
